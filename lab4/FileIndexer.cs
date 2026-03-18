@@ -4,23 +4,24 @@ using System.IO;
 
 namespace Indexing {
   public class FileIndexer {
-    private List<FileModels.TextFile> indexedFiles;
+    private List<FileModels.TextFile> _indexedFiles;
 
     public FileIndexer()
     {
-      this.indexedFiles = new List<FileModels.TextFile>();
+      this._indexedFiles = new List<FileModels.TextFile>();
     }
 
     public void IndexFilesInDirectory(string directoryPath)
     {
-      const string textFilePattern = "*.txt";
-
+      string textFilePattern;
       string[] textFiles;
       string currentFilePath;
       FileModels.TextFile currentFile;
       int fileIndex;
 
-      this.indexedFiles.Clear();
+      textFilePattern = "*.txt";
+
+      this._indexedFiles.Clear();
 
       if (!Directory.Exists(directoryPath))
       {
@@ -34,24 +35,25 @@ namespace Indexing {
       {
         currentFilePath = textFiles[fileIndex];
         currentFile = new FileModels.TextFile(currentFilePath);
-        this.indexedFiles.Add(currentFile);
+        this._indexedFiles.Add(currentFile);
       }
 
-      Console.WriteLine("indexing completed. files found: " + this.indexedFiles.Count);
+      Console.WriteLine("indexing completed. files found: " + this._indexedFiles.Count);
     }
 
     public List<FileModels.TextFile> GetIndexedFiles()
     {
-      return this.indexedFiles;
+      return this._indexedFiles;
     }
 
     public void ShowIndexedFiles(int maxFilesToShow)
     {
       int displayCount;
       int fileIndex;
+
       FileModels.TextFile file;
 
-      if (this.indexedFiles.Count == 0)
+      if (this._indexedFiles.Count == 0)
       {
         Console.WriteLine("index is empty.");
         return;
@@ -61,20 +63,20 @@ namespace Indexing {
 
       displayCount = maxFilesToShow;
 
-      if (this.indexedFiles.Count < displayCount)
+      if (this._indexedFiles.Count < displayCount)
       {
-        displayCount = this.indexedFiles.Count;
+        displayCount = this._indexedFiles.Count;
       }
 
       for (fileIndex = 0; fileIndex < displayCount; ++fileIndex)
       {
-        file = this.indexedFiles[fileIndex];
+        file = this._indexedFiles[fileIndex];
         Console.WriteLine("  " + (fileIndex + 1) + ". " + file.GetFileName());
       }
 
-      if (this.indexedFiles.Count > maxFilesToShow)
+      if (this._indexedFiles.Count > maxFilesToShow)
       {
-        Console.WriteLine("  ... and " + (this.indexedFiles.Count - maxFilesToShow) + " more files");
+        Console.WriteLine("  ... and " + (this._indexedFiles.Count - maxFilesToShow) + " more files");
       }
     }
   }

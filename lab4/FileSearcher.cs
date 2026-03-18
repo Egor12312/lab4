@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 
 namespace Search {
-  public class FileSearcher {
-    private const string headerMessage = "\n=== Search Results ===";
-    private const string noFilesMessage = "No Files Found.";
-    private const string foundFilePrefix = "Found File: ";
-    private const string filePathPrefix = "  Path: ";
-    private const string creationDatePrefix = "  Creation Date: ";
+  public class FileSearcher 
+  {
+    private string headerMessage;
+    private string noFilesMessage;
+    private string foundFilePrefix;
+    private string filePathPrefix;
+    private string creationDatePrefix;
+
+    public FileSearcher()
+    {
+      headerMessage = "\n=== Search Results ====";
+      noFilesMessage = "No Files Found.";
+      foundFilePrefix = "Found File: ";
+      filePathPrefix = " Path: ";
+      creationDatePrefix = " Creation Date: ";
+    }
 
     public List<FileModels.TextFile> SearchByKeywords(List<FileModels.TextFile> filesToSearch, List<string> keyWords)
     {
@@ -57,6 +67,7 @@ namespace Search {
     public void PrintSearchResults(List<FileModels.TextFile> foundFiles)
     {
       int resultIndex;
+
       FileModels.TextFile foundFile;
 
       Console.WriteLine(headerMessage);

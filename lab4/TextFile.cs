@@ -3,17 +3,17 @@ using System.IO;
 
 namespace FileModels {
   public class TextFile {
-    private string filePath;
-    private string fileName;
-    private string fileContent;
-    private DateTime creationDate;
+    private string _filePath;
+    private string _fileName;
+    private string _fileContent;
+    private DateTime _creationDate;
 
     public TextFile()
     {
-      this.filePath = string.Empty;
-      this.fileName = string.Empty;
-      this.fileContent = string.Empty;
-      this.creationDate = DateTime.Now;
+      this._filePath = string.Empty;
+      this._fileName = string.Empty;
+      this._fileContent = string.Empty;
+      this._creationDate = DateTime.Now;
     }
 
     public TextFile(string filePath)
@@ -22,35 +22,35 @@ namespace FileModels {
 
       fullPath = filePath;
 
-      this.filePath = fullPath;
-      this.fileName = Path.GetFileName(fullPath);
-      this.creationDate = File.GetCreationTime(fullPath);
-      this.fileContent = File.ReadAllText(fullPath);
+      this._filePath = fullPath;
+      this._fileName = Path.GetFileName(fullPath);
+      this._creationDate = File.GetCreationTime(fullPath);
+      this._fileContent = File.ReadAllText(fullPath);
     }
 
     public string GetFilePath()
     {
-      return this.filePath;
+      return this._filePath;
     }
 
     public string GetFileName()
     {
-      return this.fileName;
+      return this._fileName;
     }
 
     public string GetFileContent()
     {
-      return this.fileContent;
+      return this._fileContent;
     }
 
     public void SetFileContent(string content)
     {
-      this.fileContent = content;
+      this._fileContent = content;
     }
 
     public DateTime GetCreationDate()
     {
-      return this.creationDate;
+      return this._creationDate;
     }
   }
 }

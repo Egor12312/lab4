@@ -151,57 +151,57 @@ namespace Serialization {
 
   [Serializable]
   public class SerializableTextFile {
-    private string filePath;
-    private string fileName;
-    private string fileContent;
-    private DateTime creationDate;
+    private string _filePath;
+    private string _fileName;
+    private string _fileContent;
+    private DateTime _creationDate;
 
     public SerializableTextFile()
     {
-      this.filePath = string.Empty;
-      this.fileName = string.Empty;
-      this.fileContent = string.Empty;
-      this.creationDate = DateTime.Now;
+      this._filePath = string.Empty;
+      this._fileName = string.Empty;
+      this._fileContent = string.Empty;
+      this._creationDate = DateTime.Now;
     }
 
     public string GetFilePath()
     {
-      return this.filePath;
+      return this._filePath;
     }
 
     public void SetFilePath(string path)
     {
-      this.filePath = path;
+      this._filePath = path;
     }
 
     public string GetFileName()
     {
-      return this.fileName;
+      return this._fileName;
     }
 
     public void SetFileName(string name)
     {
-      this.fileName = name;
+      this._fileName = name;
     }
 
     public string GetFileContent()
     {
-      return this.fileContent;
+      return this._fileContent;
     }
 
     public void SetFileContent(string content)
     {
-      this.fileContent = content;
+      this._fileContent = content;
     }
 
     public DateTime GetCreationDate()
     {
-      return this.creationDate;
+      return this._creationDate;
     }
 
     public void SetCreationDate(DateTime date)
     {
-      this.creationDate = date;
+      this._creationDate = date;
     }
   }
 }

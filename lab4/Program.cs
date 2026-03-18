@@ -7,37 +7,37 @@ using Memento;
 using Indexing;
 
 class Program {
-  private static int menuEditFile;
-  private static int menuUndoChanges;
-  private static int menuSaveXml;
-  private static int menuSaveBinary;
-  private static int menuLoadXml;
-  private static int menuLoadBinary;
-  private static int menuSearch;
-  private static int menuIndex;
-  private static int menuExit;
+  private static int _menuEditFile;
+  private static int _menuUndoChanges;
+  private static int _menuSaveXml;
+  private static int _menuSaveBinary;
+  private static int _menuLoadXml;
+  private static int _menuLoadBinary;
+  private static int _menuSearch;
+  private static int _menuIndex;
+  private static int _menuExit;
 
-  private static string binaryDumpPath;
-  private static string xmlDumpPath;
-  private static char keywordsSeparator;
-  private static int maxFilesToDisplay;
+  private static string _binaryDumpPath;
+  private static string _xmlDumpPath;
+  private static char _keywordsSeparator;
+  private static int _maxFilesToDisplay;
 
   static Program()
   {
-    menuEditFile = 1;
-    menuUndoChanges = 2;
-    menuSaveXml = 3;
-    menuSaveBinary = 4;
-    menuLoadXml = 5;
-    menuLoadBinary = 6;
-    menuSearch = 7;
-    menuIndex = 8;
-    menuExit = 0;
+    _menuEditFile = 1;
+    _menuUndoChanges = 2;
+    _menuSaveXml = 3;
+    _menuSaveBinary = 4;
+    _menuLoadXml = 5;
+    _menuLoadBinary = 6;
+    _menuSearch = 7;
+    _menuIndex = 8;
+    _menuExit = 0;
 
-    binaryDumpPath = "file_backup.bin";
-    xmlDumpPath = "file_backup.xml";
-    keywordsSeparator = ',';
-    maxFilesToDisplay = 3;
+    _binaryDumpPath = "file_backup.bin";
+    _xmlDumpPath = "file_backup.xml";
+    _keywordsSeparator = ',';
+    _maxFilesToDisplay = 3;
   }
 
   static void Main(string[] args)
@@ -47,8 +47,6 @@ class Program {
     FileSearcher searcher;
     TextEditor textEditor;
     FileIndexer indexer;
-    bool isRunning;
-    int userChoice;
 
     string newContent;
     string keyWordsInput;
@@ -61,6 +59,18 @@ class Program {
 
     int wordIndex;
     int fileIndex;
+    string inputLine;
+    bool parseSuccess;
+    string editContent;
+    string pathInput;
+    bool isRunning;
+    int userChoice;
+
+    string searchInput;
+    string[] searchArray;
+    List<string> searchList;
+    string currentWord;
+    int index;
 
     currentFile = new TextFile();
     serialization = new SerializationHandler();
@@ -100,20 +110,16 @@ class Program {
       Console.WriteLine("0. Exit");
       Console.Write("Your Choice: ");
 
-      string inputLine;
       inputLine = Console.ReadLine();
-
-      bool parseSuccess;
       parseSuccess = int.TryParse(inputLine, out userChoice);
 
       if (!parseSuccess)
       {
-        -- userChoice;
+        --userChoice;
       }
 
-      if (userChoice == menuEditFile)
+      if (userChoice == _menuEditFile)
       {
-        string editContent;
 
         Console.Write("Enter New File Content: ");
         editContent = Console.ReadLine();
@@ -128,7 +134,7 @@ class Program {
 
         currentFile = textEditor.GetCurrentFile();
       }
-      else if (userChoice == menuUndoChanges)
+      else if (userChoice == _menuUndoChanges)
       {
         if (textEditor != null)
         {
@@ -140,49 +146,44 @@ class Program {
           Console.WriteLine("First Edit Or Load A File (Option 1, 5 Or 6).");
         }
       }
-      else if (userChoice == menuSaveXml)
+      else if (userChoice == _menuSaveXml)
       {
-        Console.WriteLine("Performing XML Serialization To File: " + xmlDumpPath);
-        serialization.XmlSerialize(currentFile, xmlDumpPath);
+        Console.WriteLine("Performing XML Serialization To File: " + _xmlDumpPath);
+        serialization.XmlSerialize(currentFile, _xmlDumpPath);
       }
-      else if (userChoice == menuSaveBinary)
+      else if (userChoice == _menuSaveBinary)
       {
-        Console.WriteLine("Performing Binary Serialization To File: " + binaryDumpPath);
-        serialization.BinarySerialize(currentFile, binaryDumpPath);
+        Console.WriteLine("Performing Binary Serialization To File: " + _binaryDumpPath);
+        serialization.BinarySerialize(currentFile, _binaryDumpPath);
       }
-      else if (userChoice == menuLoadXml)
+      else if (userChoice == _menuLoadXml)
       {
-        Console.WriteLine("Loading From XML File: " + xmlDumpPath);
-        currentFile = serialization.XmlDeserialize(xmlDumpPath);
+        Console.WriteLine("Loading From XML File: " + _xmlDumpPath);
+        currentFile = serialization.XmlDeserialize(_xmlDumpPath);
         textEditor = new TextEditor(currentFile);
         Console.WriteLine("Loaded File: " + currentFile.GetFileName());
         Console.WriteLine("Content: " + currentFile.GetFileContent());
       }
-      else if (userChoice == menuLoadBinary)
+      else if (userChoice == _menuLoadBinary)
       {
-        Console.WriteLine("Loading From Binary File: " + binaryDumpPath);
-        currentFile = serialization.BinaryDeserialize(binaryDumpPath);
+        Console.WriteLine("Loading From Binary File: " + _binaryDumpPath);
+        currentFile = serialization.BinaryDeserialize(_binaryDumpPath);
         textEditor = new TextEditor(currentFile);
         Console.WriteLine("Loaded File: " + currentFile.GetFileName());
         Console.WriteLine("Content: " + currentFile.GetFileContent());
       }
-      else if (userChoice == menuSearch)
+      else if (userChoice == _menuSearch)
       {
-        string searchInput;
-        string[] searchArray;
-        List<string> searchList;
-        string currentWord;
-        int idx;
 
         Console.Write("Enter Keywords (Comma Separated): ");
         searchInput = Console.ReadLine();
 
-        searchArray = searchInput.Split(keywordsSeparator);
+        searchArray = searchInput.Split(_keywordsSeparator);
         searchList = new List<string>();
 
-        for (idx = 0; idx < searchArray.Length; ++idx)
+        for (index = 0; index < searchArray.Length; ++index)
         {
-          currentWord = searchArray[idx].Trim();
+          currentWord = searchArray[index].Trim();
 
           if (!string.IsNullOrEmpty(currentWord))
           {
@@ -202,17 +203,16 @@ class Program {
           searcher.PrintSearchResults(searchResults);
         }
       }
-      else if (userChoice == menuIndex)
+      else if (userChoice == _menuIndex)
       {
-        string pathInput;
 
         Console.Write("Enter Directory Path: ");
         pathInput = Console.ReadLine();
 
         indexer.IndexFilesInDirectory(pathInput);
-        indexer.ShowIndexedFiles(maxFilesToDisplay);
+        indexer.ShowIndexedFiles(_maxFilesToDisplay);
       }
-      else if (userChoice == menuExit)
+      else if (userChoice == _menuExit)
       {
         isRunning = false;
       }

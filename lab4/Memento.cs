@@ -3,86 +3,88 @@ using System.Collections.Generic;
 
 namespace Memento {
   public class TextFileMemento {
-    private string content;
+    private string _content;
 
     public TextFileMemento(string content)
     {
-      this.content = content;
+      this._content = content;
     }
 
     public string GetContent()
     {
-      return this.content;
+      return this._content;
     }
   }
 
   public class History {
-    private Stack<TextFileMemento> history;
+    private Stack<TextFileMemento> _history;
 
     public History()
     {
-      this.history = new Stack<TextFileMemento>();
+      this._history = new Stack<TextFileMemento>();
     }
 
     public void Push(TextFileMemento memento)
     {
-      this.history.Push(memento);
+      this._history.Push(memento);
     }
 
     public TextFileMemento Pop()
     {
-      return this.history.Pop();
+      return this._history.Pop();
     }
 
     public TextFileMemento Peek()
     {
-      return this.history.Peek();
+      return this._history.Peek();
     }
 
     public int GetCount()
     {
-      return this.history.Count;
+      return this._history.Count;
     }
   }
 
   public class TextEditor {
-    private FileModels.TextFile currentFile;
-    private History history;
+    private FileModels.TextFile _currentFile;
+    private History _history;
 
     public TextEditor(FileModels.TextFile file)
     {
       TextFileMemento initialMemento;
 
-      this.currentFile = file;
-      this.history = new History();
+      this._currentFile = file;
+      this._history = new History();
 
-      initialMemento = new TextFileMemento(this.currentFile.GetFileContent());
-      this.history.Push(initialMemento);
+      initialMemento = new TextFileMemento(this._currentFile.GetFileContent());
+      this._history.Push(initialMemento);
     }
 
     public void EditContent(string newContent)
     {
       TextFileMemento newMemento;
 
-      this.currentFile.SetFileContent(newContent);
+      this._currentFile.SetFileContent(newContent);
 
       newMemento = new TextFileMemento(newContent);
-      this.history.Push(newMemento);
+      this._history.Push(newMemento);
 
       Console.WriteLine("State Saved.");
     }
 
     public void Undo()
     {
-      const int minimumHistoryCount = 1;
+      int minimumHistoryCount;
+
+      minimumHistoryCount = 1;
 
       TextFileMemento previousState;
 
-      if (this.history.GetCount() > minimumHistoryCount)
+      if (this._history.GetCount() > minimumHistoryCount)
       {
-        this.history.Pop();
-        previousState = this.history.Peek();
-        this.currentFile.SetFileContent(previousState.GetContent());
+        this._history.Pop();
+        previousState = this._history.Peek();
+        this._currentFile.SetFileContent(previousState.GetContent());
         Console.WriteLine("Undo Completed.");
       }
       else
@@ -93,15 +95,17 @@ namespace Memento {
 
     public void ShowContent()
     {
-      const string contentHeader = "\n--- Current Content ---";
+      string contentHeader;
+
+      contentHeader = "\n--- Current Content ---";
 
       Console.WriteLine(contentHeader);
-      Console.WriteLine(this.currentFile.GetFileContent());
+      Console.WriteLine(this._currentFile.GetFileContent());
     }
 
     public FileModels.TextFile GetCurrentFile()
     {
-      return this.currentFile;
+      return this._currentFile;
     }
   }
 }
