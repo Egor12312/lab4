@@ -120,7 +120,6 @@ class Program {
 
       if (userChoice == _menuEditFile)
       {
-
         Console.Write("Enter New File Content: ");
         editContent = Console.ReadLine();
 
@@ -205,7 +204,6 @@ class Program {
       }
       else if (userChoice == _menuIndex)
       {
-
         Console.Write("Enter Directory Path: ");
         pathInput = Console.ReadLine();
 

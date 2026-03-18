@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 
 namespace Search {
-  public class FileSearcher 
-  {
-    private string headerMessage;
-    private string noFilesMessage;
-    private string foundFilePrefix;
-    private string filePathPrefix;
-    private string creationDatePrefix;
+  public class FileSearcher {
+    private string _headerMessage;
+    private string _noFilesMessage;
+    private string _foundFilePrefix;
+    private string _filePathPrefix;
+    private string _creationDatePrefix;
 
     public FileSearcher()
     {
-      headerMessage = "\n=== Search Results ====";
-      noFilesMessage = "No Files Found.";
-      foundFilePrefix = "Found File: ";
-      filePathPrefix = " Path: ";
-      creationDatePrefix = " Creation Date: ";
+      _headerMessage = "\n=== Search Results ====";
+      _noFilesMessage = "No Files Found.";
+      _foundFilePrefix = "Found File: ";
+      _filePathPrefix = " Path: ";
+      _creationDatePrefix = " Creation Date: ";
     }
 
     public List<FileModels.TextFile> SearchByKeywords(List<FileModels.TextFile> filesToSearch, List<string> keyWords)
@@ -67,23 +66,22 @@ namespace Search {
     public void PrintSearchResults(List<FileModels.TextFile> foundFiles)
     {
       int resultIndex;
-
       FileModels.TextFile foundFile;
 
-      Console.WriteLine(headerMessage);
+      Console.WriteLine(_headerMessage);
 
       if (foundFiles.Count == 0)
       {
-        Console.WriteLine(noFilesMessage);
+        Console.WriteLine(_noFilesMessage);
       }
       else
       {
         for (resultIndex = 0; resultIndex < foundFiles.Count; ++resultIndex)
         {
           foundFile = foundFiles[resultIndex];
-          Console.WriteLine(foundFilePrefix + foundFile.GetFileName());
-          Console.WriteLine(filePathPrefix + foundFile.GetFilePath());
-          Console.WriteLine(creationDatePrefix + foundFile.GetCreationDate());
+          Console.WriteLine(_foundFilePrefix + foundFile.GetFileName());
+          Console.WriteLine(_filePathPrefix + foundFile.GetFilePath());
+          Console.WriteLine(_creationDatePrefix + foundFile.GetCreationDate());
         }
       }
     }
