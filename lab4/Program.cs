@@ -173,7 +173,6 @@ class Program {
       }
       else if (userChoice == _menuSearch)
       {
-
         Console.Write("Enter Keywords (Comma Separated): ");
         searchInput = Console.ReadLine();
 
