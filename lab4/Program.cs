@@ -33,7 +33,6 @@ class Program {
     _menuSearch = 7;
     _menuIndex = 8;
     _menuExit = 0;
-
     _binaryDumpPath = "file_backup.bin";
     _xmlDumpPath = "file_backup.xml";
     _keywordsSeparator = ',';
