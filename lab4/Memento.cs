@@ -2,7 +2,30 @@
 using System.Collections.Generic;
 
 namespace Memento {
-  public class TextFileMemento {
+  public interface IMemento {
+    string GetContent();
+  }
+
+  public interface IHistory {
+    void Push(IMemento memento);
+    IMemento Pop();
+    IMemento Peek();
+    int GetCount();
+  }
+
+  public interface ITextEditor {
+    void EditContent(string newContent);
+    void Undo();
+    void ShowContent();
+    FileModels.TextFile GetCurrentFile();
+  }
+
+  public interface IOriginator {
+    object GetMemento();
+    void SetMemento(object memento);
+  }
+
+  public class TextFileMemento : IMemento {
     private string _content;
 
     public TextFileMemento(string content)
@@ -16,25 +39,25 @@ namespace Memento {
     }
   }
 
-  public class History {
-    private Stack<TextFileMemento> _history;
+  public class History : IHistory {
+    private Stack<IMemento> _history;
 
     public History()
     {
-      this._history = new Stack<TextFileMemento>();
+      this._history = new Stack<IMemento>();
     }
 
-    public void Push(TextFileMemento memento)
+    public void Push(IMemento memento)
     {
       this._history.Push(memento);
     }
 
-    public TextFileMemento Pop()
+    public IMemento Pop()
     {
       return this._history.Pop();
     }
 
-    public TextFileMemento Peek()
+    public IMemento Peek()
     {
       return this._history.Peek();
     }
@@ -45,13 +68,13 @@ namespace Memento {
     }
   }
 
-  public class TextEditor {
+  public class TextEditor : ITextEditor, IOriginator {
     private FileModels.TextFile _currentFile;
-    private History _history;
+    private IHistory _history;
 
     public TextEditor(FileModels.TextFile file)
     {
-      TextFileMemento initialMemento;
+      IMemento initialMemento;
 
       this._currentFile = file;
       this._history = new History();
@@ -62,7 +85,7 @@ namespace Memento {
 
     public void EditContent(string newContent)
     {
-      TextFileMemento newMemento;
+      IMemento newMemento;
 
       this._currentFile.SetFileContent(newContent);
 
@@ -78,7 +101,7 @@ namespace Memento {
 
       minimumHistoryCount = 1;
 
-      TextFileMemento previousState;
+      IMemento previousState;
 
       if (this._history.GetCount() > minimumHistoryCount)
       {
@@ -106,6 +129,31 @@ namespace Memento {
     public FileModels.TextFile GetCurrentFile()
     {
       return this._currentFile;
+    }
+
+    public object GetMemento()
+    {
+      string currentContent;
+
+      currentContent = this._currentFile.GetFileContent();
+
+      return new TextFileMemento(currentContent);
+    }
+
+    public void SetMemento(object memento)
+    {
+      TextFileMemento textFileMemento;
+
+      if (memento is TextFileMemento)
+      {
+        textFileMemento = (TextFileMemento)memento;
+        this._currentFile.SetFileContent(textFileMemento.GetContent());
+        Console.WriteLine("Memento Restored.");
+      }
+      else
+      {
+        Console.WriteLine("Invalid Memento Type.");
+      }
     }
   }
 }

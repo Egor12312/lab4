@@ -47,6 +47,7 @@ class Program {
     FileSearcher searcher;
     TextEditor textEditor;
     FileIndexer indexer;
+    History history;
 
     string newContent;
     string keyWordsInput;
@@ -77,6 +78,7 @@ class Program {
     searcher = new FileSearcher();
     indexer = new FileIndexer();
     textEditor = null;
+    history = new History();
     isRunning = true;
 
     newContent = string.Empty;
@@ -115,7 +117,7 @@ class Program {
 
       if (!parseSuccess)
       {
-        --userChoice;
+        userChoice = -1;
       }
 
       if (userChoice == _menuEditFile)
@@ -128,6 +130,11 @@ class Program {
           textEditor = new TextEditor(currentFile);
         }
 
+        IMemento stateBeforeEdit;
+        stateBeforeEdit = new TextFileMemento(currentFile.GetFileContent());
+        history.Push(stateBeforeEdit);
+        Console.WriteLine("State Saved Before Edit.");
+
         textEditor.EditContent(editContent);
         textEditor.ShowContent();
 
@@ -137,8 +144,20 @@ class Program {
       {
         if (textEditor != null)
         {
-          textEditor.Undo();
-          textEditor.ShowContent();
+          IMemento previousState;
+
+          if (history.GetCount() > 1)
+          {
+            previousState = history.Pop();
+            currentFile.SetFileContent(previousState.GetContent());
+            textEditor = new TextEditor(currentFile);
+            Console.WriteLine("Undo Completed Using History.");
+            textEditor.ShowContent();
+          }
+          else
+          {
+            Console.WriteLine("Cannot Undo: History Is Empty.");
+          }
         }
         else
         {
@@ -160,6 +179,12 @@ class Program {
         Console.WriteLine("Loading From XML File: " + _xmlDumpPath);
         currentFile = serialization.XmlDeserialize(_xmlDumpPath);
         textEditor = new TextEditor(currentFile);
+
+        history = new History();
+        IMemento loadedState;
+        loadedState = new TextFileMemento(currentFile.GetFileContent());
+        history.Push(loadedState);
+
         Console.WriteLine("Loaded File: " + currentFile.GetFileName());
         Console.WriteLine("Content: " + currentFile.GetFileContent());
       }
@@ -168,6 +193,12 @@ class Program {
         Console.WriteLine("Loading From Binary File: " + _binaryDumpPath);
         currentFile = serialization.BinaryDeserialize(_binaryDumpPath);
         textEditor = new TextEditor(currentFile);
+
+        history = new History();
+        IMemento loadedState;
+        loadedState = new TextFileMemento(currentFile.GetFileContent());
+        history.Push(loadedState);
+
         Console.WriteLine("Loaded File: " + currentFile.GetFileName());
         Console.WriteLine("Content: " + currentFile.GetFileContent());
       }
